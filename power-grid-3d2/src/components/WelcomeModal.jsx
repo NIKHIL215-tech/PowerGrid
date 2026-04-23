@@ -1,65 +1,78 @@
 const JOURNEY_STEPS = [
-  { icon: '🏭', label: 'Generate',  desc: 'Make electricity' },
-  { icon: '🔌', label: 'Transmit',  desc: 'Send it far' },
-  { icon: '🏘️', label: 'Distribute', desc: 'Bring it near' },
-  { icon: '📊', label: 'Measure',   desc: 'Track usage' },
-  { icon: '🏠', label: 'You!',      desc: 'Power home' },
+  { code: 'GEN', label: 'Generate', desc: 'Produce electrical energy' },
+  { code: 'TX', label: 'Transmit', desc: 'Move at high voltage' },
+  { code: 'DIST', label: 'Distribute', desc: 'Route to local zones' },
+  { code: 'IOT', label: 'Measure', desc: 'Monitor in real time' },
+  { code: 'LOAD', label: 'Consumer', desc: 'Power homes and industry' },
 ]
 
 export default function WelcomeModal({ onStartTour, onExplore }) {
   return (
     <div className="modal-backdrop">
       <div className="welcome-modal">
-
-        {/* Gradient hero */}
         <div className="welcome-hero">
-          <span className="welcome-emoji">⚡</span>
-          <h1>Power Grid 3D</h1>
+          <div className="welcome-hero-top">
+            <span className="welcome-emoji">PG</span>
+            <span className="welcome-chip">Digital Twin</span>
+          </div>
+          <h1>Power Grid 3D Command Brief</h1>
           <span className="welcome-subtitle">
-            An interactive guide to how electricity reaches your home
+            Explore how generation, transmission, storage, and IoT coordinate to deliver stable electricity from source to consumer.
           </span>
+          <div className="welcome-hero-metrics">
+            <div className="welcome-hero-metric">
+              <strong>5</strong>
+              <span>Flow Stages</span>
+            </div>
+            <div className="welcome-hero-metric">
+              <strong>1,288</strong>
+              <span>IoT Nodes</span>
+            </div>
+            <div className="welcome-hero-metric">
+              <strong>97.2%</strong>
+              <span>Avg Efficiency</span>
+            </div>
+          </div>
         </div>
 
         <div className="welcome-body">
-          {/* Water analogy */}
           <div className="welcome-analogy">
-            <span className="analogy-icon">💧</span>
+            <span className="analogy-icon">FLOW</span>
             <div>
-              <strong>Think of it like a water supply system</strong>
+              <strong>Think of the grid as a managed utility pipeline</strong>
               <p>
-                Just like water is pumped from a source, through pipes, and into your tap —
-                electricity is generated at a power plant, carried through wires, and delivered
-                to your home.
+                Energy is produced at centralized sources, transported through high-capacity infrastructure,
+                conditioned by substations, and delivered to consumers with live sensor feedback at every step.
               </p>
             </div>
           </div>
 
-          {/* Journey steps */}
           <div className="welcome-journey">
-            {JOURNEY_STEPS.map((step, i) => (
-              <>
-                <div key={step.label} className="welcome-step">
-                  <div className="welcome-step-icon">{step.icon}</div>
+            {JOURNEY_STEPS.map((step, index) => (
+              <div
+                key={step.label}
+                className={`welcome-step-wrap${index === JOURNEY_STEPS.length - 1 ? ' is-last' : ''}`}
+              >
+                <div className="welcome-step">
+                  <div className="welcome-step-icon">{step.code}</div>
                   <div className="welcome-step-label">{step.label}</div>
                   <div className="welcome-step-desc">{step.desc}</div>
                 </div>
-                {i < JOURNEY_STEPS.length - 1 && (
-                  <span key={`arrow-${i}`} className="welcome-step-arrow">›</span>
-                )}
-              </>
+              </div>
             ))}
           </div>
 
-          {/* CTA */}
           <div className="welcome-actions">
-            <button className="btn-primary" onClick={onStartTour}>▶ Start Guided Tour</button>
-            <button className="btn-secondary" onClick={onExplore}>Explore on my own</button>
+            <button className="btn-primary" onClick={onStartTour}>
+              Launch Guided Tour
+            </button>
+            <button className="btn-secondary" onClick={onExplore}>
+              Continue to Dashboard
+            </button>
           </div>
-          <p className="welcome-hint">
-            💡 Click any glowing node in the 3D view to learn what it does
-          </p>
-        </div>
 
+          <p className="welcome-hint">Tip: Click any highlighted node in the 3D map to inspect live details.</p>
+        </div>
       </div>
     </div>
   )

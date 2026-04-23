@@ -1,46 +1,67 @@
-import { useRef, useState, useMemo } from 'react'
+import { useRef, useState } from 'react'
 import { useFrame } from '@react-three/fiber'
-import { Text } from '@react-three/drei'
+import { Billboard, Text } from '@react-three/drei'
 import * as THREE from 'three'
 
 const TYPE_COLORS = {
-  coal: '#888888',
-  nuclear: '#ffaa00',
-  solar: '#ffdd00',
-  wind: '#00ddff',
-  substation: '#4488ff',
-  meter: '#00ff88',
-  sensor: '#ff44aa',
-  battery: '#aa44ff',
+  coal: '#8b8f99',
+  nuclear: '#eab35d',
+  solar: '#d2b643',
+  wind: '#58c3f6',
+  substation: '#5d8fff',
+  meter: '#2fd8a7',
+  sensor: '#ff72b6',
+  battery: '#9158ff',
 }
 
-const TYPE_EMISSIVE = {
-  coal: '#333333',
-  nuclear: '#442200',
-  solar: '#443300',
-  wind: '#003344',
-  substation: '#001144',
-  meter: '#003322',
-  sensor: '#440022',
-  battery: '#220044',
+const MTL = {
+  metalDark: { color: '#2e3442', metalness: 0.62, roughness: 0.35 },
+  metalLight: { color: '#9ea8b8', metalness: 0.68, roughness: 0.3 },
+  panelGlass: { color: '#2e4a72', metalness: 0.85, roughness: 0.2 },
+  groundPad: { color: '#242b36', metalness: 0.12, roughness: 0.9 },
 }
 
 function CoalPlant({ color, hovered }) {
   return (
     <group>
-      <mesh castShadow position={[0, 0.6, 0]}>
-        <boxGeometry args={[1.8, 1.2, 1.2]} />
-        <meshStandardMaterial color={color} emissive={hovered ? color : '#111'} emissiveIntensity={hovered ? 0.4 : 0} />
+      <mesh castShadow receiveShadow position={[0, 0.08, 0]}>
+        <boxGeometry args={[3.4, 0.16, 2.4]} />
+        <meshStandardMaterial {...MTL.groundPad} />
       </mesh>
-      {[-0.5, 0.5].map((x, i) => (
-        <mesh key={i} position={[x, 1.8, 0]} castShadow>
-          <cylinderGeometry args={[0.18, 0.22, 1.6, 8]} />
-          <meshStandardMaterial color="#555" />
+
+      <mesh castShadow receiveShadow position={[0, 0.72, 0]}>
+        <boxGeometry args={[2.4, 1.2, 1.6]} />
+        <meshStandardMaterial color="#515a66" metalness={0.2} roughness={0.7} />
+      </mesh>
+
+      <mesh castShadow position={[0.95, 1.35, 0]}>
+        <boxGeometry args={[0.9, 0.5, 1.1]} />
+        <meshStandardMaterial color="#636c78" metalness={0.32} roughness={0.6} />
+      </mesh>
+
+      {[-0.75, 0.05, 0.85].map((x, i) => (
+        <group key={i} position={[x, 0, -0.62]}>
+          <mesh castShadow position={[0, 0.9, 0]}>
+            <cylinderGeometry args={[0.12, 0.16, 1.8, 12]} />
+            <meshStandardMaterial color="#8f96a4" metalness={0.45} roughness={0.45} />
+          </mesh>
+          <mesh position={[0, 1.95, 0]}>
+            <sphereGeometry args={[0.11, 10, 10]} />
+            <meshStandardMaterial color="#5a6474" emissive={hovered ? color : '#2f3440'} emissiveIntensity={hovered ? 0.35 : 0.1} />
+          </mesh>
+        </group>
+      ))}
+
+      {[-0.9, 0.9].map((x, i) => (
+        <mesh key={i} castShadow position={[x, 0.42, 0.72]}>
+          <boxGeometry args={[0.55, 0.6, 0.45]} />
+          <meshStandardMaterial color="#36404d" emissive={hovered ? color : '#12161d'} emissiveIntensity={hovered ? 0.25 : 0.06} />
         </mesh>
       ))}
-      <mesh position={[0, 0.15, 0]}>
-        <boxGeometry args={[2.4, 0.3, 1.6]} />
-        <meshStandardMaterial color="#444" />
+
+      <mesh castShadow position={[0, 1.42, 0.82]} rotation={[0, 0, Math.PI / 2]}>
+        <cylinderGeometry args={[0.08, 0.08, 2.1, 10]} />
+        <meshStandardMaterial color="#8a95a6" metalness={0.6} roughness={0.35} />
       </mesh>
     </group>
   )
@@ -49,56 +70,126 @@ function CoalPlant({ color, hovered }) {
 function NuclearPlant({ color, hovered }) {
   return (
     <group>
-      <mesh castShadow position={[0, 0.8, 0]}>
-        <cylinderGeometry args={[0.8, 1.0, 1.6, 12]} />
-        <meshStandardMaterial color={color} emissive={hovered ? color : '#220'} emissiveIntensity={hovered ? 0.5 : 0.1} />
+      <mesh castShadow receiveShadow position={[0, 0.08, 0]}>
+        <boxGeometry args={[3.2, 0.16, 2.3]} />
+        <meshStandardMaterial {...MTL.groundPad} />
       </mesh>
-      <mesh position={[1.2, 0.5, 0]} castShadow>
-        <boxGeometry args={[1.0, 1.0, 0.9]} />
-        <meshStandardMaterial color="#aaa" />
+
+      <mesh castShadow receiveShadow position={[0, 0.78, 0]}>
+        <cylinderGeometry args={[0.95, 1.05, 1.45, 24]} />
+        <meshStandardMaterial color="#8f969f" metalness={0.12} roughness={0.8} />
       </mesh>
-      <mesh position={[0, 1.65, 0]}>
-        <sphereGeometry args={[0.82, 12, 8, 0, Math.PI * 2, 0, Math.PI / 2]} />
-        <meshStandardMaterial color="#cccccc" />
+
+      <mesh castShadow position={[0, 1.57, 0]}>
+        <sphereGeometry args={[0.98, 24, 18, 0, Math.PI * 2, 0, Math.PI / 2]} />
+        <meshStandardMaterial color="#c6cad1" metalness={0.16} roughness={0.58} emissive={hovered ? color : '#221300'} emissiveIntensity={hovered ? 0.28 : 0.05} />
+      </mesh>
+
+      {[[-1.22, -0.52], [1.22, -0.52]].map(([x, z], i) => (
+        <group key={i} position={[x, 0, z]}>
+          <mesh castShadow position={[0, 0.68, 0]}>
+            <cylinderGeometry args={[0.38, 0.5, 1.35, 16]} />
+            <meshStandardMaterial color="#939aa5" metalness={0.1} roughness={0.85} />
+          </mesh>
+          <mesh position={[0, 1.4, 0]}>
+            <sphereGeometry args={[0.37, 14, 10, 0, Math.PI * 2, 0, Math.PI / 2]} />
+            <meshStandardMaterial color="#bec4cc" />
+          </mesh>
+        </group>
+      ))}
+
+      <mesh castShadow position={[0, 0.45, 0.98]}>
+        <boxGeometry args={[1.55, 0.58, 0.45]} />
+        <meshStandardMaterial color="#596273" metalness={0.25} roughness={0.62} />
       </mesh>
     </group>
   )
 }
 
 function SolarFarm({ color, hovered }) {
-  const panels = []
-  for (let r = -1; r <= 1; r++) {
-    for (let c = -1; c <= 1; c++) {
-      panels.push(
-        <mesh key={`${r}-${c}`} position={[r * 0.9, 0.35, c * 0.9]} rotation={[-Math.PI / 6, 0, 0]} castShadow>
-          <boxGeometry args={[0.75, 0.04, 0.55]} />
-          <meshStandardMaterial color={color} emissive={hovered ? color : '#221100'} emissiveIntensity={hovered ? 0.5 : 0.05} metalness={0.8} roughness={0.2} />
-        </mesh>
-      )
-    }
-  }
-  return <group>{panels}</group>
-}
-
-function WindFarm({ color, hovered, time }) {
   return (
     <group>
-      {[-1.2, 0, 1.2].map((x, i) => (
-        <group key={i} position={[x, 0, 0]}>
-          <mesh castShadow position={[0, 0.9, 0]}>
-            <cylinderGeometry args={[0.07, 0.1, 1.8, 6]} />
-            <meshStandardMaterial color="#ddd" />
-          </mesh>
-          <group position={[0, 1.8, 0]} rotation={[0, 0, time * (0.8 + i * 0.15)]}>
-            {[0, 1, 2].map(b => (
-              <mesh key={b} position={[0.35 * Math.cos(b * Math.PI * 2 / 3), 0.35 * Math.sin(b * Math.PI * 2 / 3), 0]} rotation={[0, 0, b * Math.PI * 2 / 3]} castShadow>
-                <boxGeometry args={[0.06, 0.7, 0.04]} />
-                <meshStandardMaterial color={color} emissive={hovered ? color : '#001122'} emissiveIntensity={hovered ? 0.4 : 0} />
-              </mesh>
-            ))}
+      <mesh castShadow receiveShadow position={[0, 0.04, 0]}>
+        <boxGeometry args={[3.5, 0.08, 3]} />
+        <meshStandardMaterial color="#2d3328" roughness={0.95} metalness={0.05} />
+      </mesh>
+
+      {Array.from({ length: 12 }).map((_, idx) => {
+        const row = Math.floor(idx / 4)
+        const col = idx % 4
+        const x = -1.35 + col * 0.9
+        const z = -0.95 + row * 0.9
+        return (
+          <group key={idx} position={[x, 0, z]}>
+            <mesh castShadow position={[0, 0.34, 0]}>
+              <boxGeometry args={[0.06, 0.5, 0.06]} />
+              <meshStandardMaterial {...MTL.metalLight} />
+            </mesh>
+            <mesh castShadow position={[0, 0.64, 0]} rotation={[-0.52, 0, 0]}>
+              <boxGeometry args={[0.7, 0.03, 0.5]} />
+              <meshStandardMaterial color={hovered ? '#3a6196' : MTL.panelGlass.color} emissive={hovered ? color : '#162338'} emissiveIntensity={hovered ? 0.22 : 0.08} metalness={0.84} roughness={0.18} />
+            </mesh>
           </group>
-        </group>
-      ))}
+        )
+      })}
+
+      <mesh castShadow position={[1.46, 0.35, 1.1]}>
+        <boxGeometry args={[0.4, 0.45, 0.32]} />
+        <meshStandardMaterial color="#5f6876" metalness={0.3} roughness={0.55} />
+      </mesh>
+    </group>
+  )
+}
+
+function WindTurbine({ x, z, color, hovered, speed }) {
+  const rotorRef = useRef()
+
+  useFrame(({ clock }) => {
+    if (rotorRef.current) {
+      // Absolute-time rotation keeps the rotor locked to its center pivot with no drift.
+      rotorRef.current.rotation.z = clock.elapsedTime * speed
+    }
+  })
+
+  return (
+    <group position={[x, 0, z]}>
+      <mesh castShadow position={[0, 1.15, 0]}>
+        <cylinderGeometry args={[0.08, 0.12, 2.3, 12]} />
+        <meshStandardMaterial color="#d5d8de" metalness={0.45} roughness={0.32} />
+      </mesh>
+      <mesh castShadow position={[0, 2.34, 0.06]}>
+        <boxGeometry args={[0.28, 0.2, 0.56]} />
+        <meshStandardMaterial color="#eceef2" metalness={0.35} roughness={0.35} />
+      </mesh>
+
+      <group ref={rotorRef} position={[0, 2.34, 0.36]}>
+        <mesh castShadow>
+          <sphereGeometry args={[0.09, 12, 12]} />
+          <meshStandardMaterial color={hovered ? '#b4e8ff' : '#e8edf5'} emissive={hovered ? color : '#12161e'} emissiveIntensity={hovered ? 0.35 : 0} />
+        </mesh>
+        {[0, 1, 2].map((blade) => (
+          <group key={blade} rotation={[0, 0, blade * ((Math.PI * 2) / 3)]}>
+            <mesh castShadow position={[0, 0.5, 0]}>
+              <boxGeometry args={[0.06, 1.0, 0.03]} />
+              <meshStandardMaterial color={hovered ? '#a7ddff' : '#f0f2f5'} emissive={hovered ? color : '#151b24'} emissiveIntensity={hovered ? 0.4 : 0} />
+            </mesh>
+          </group>
+        ))}
+      </group>
+    </group>
+  )
+}
+
+function WindFarm({ color, hovered }) {
+  return (
+    <group>
+      <mesh castShadow receiveShadow position={[0, 0.04, 0]}>
+        <boxGeometry args={[3.4, 0.08, 2]} />
+        <meshStandardMaterial color="#202c34" roughness={0.92} />
+      </mesh>
+      <WindTurbine x={-1.08} z={0} color={color} hovered={hovered} speed={1.2} />
+      <WindTurbine x={0} z={0} color={color} hovered={hovered} speed={1.45} />
+      <WindTurbine x={1.08} z={0} color={color} hovered={hovered} speed={1.1} />
     </group>
   )
 }
@@ -106,102 +197,174 @@ function WindFarm({ color, hovered, time }) {
 function Substation({ color, hovered }) {
   return (
     <group>
-      <mesh castShadow position={[0, 0.3, 0]}>
-        <boxGeometry args={[1.6, 0.6, 1.2]} />
-        <meshStandardMaterial color="#334" emissive={hovered ? color : '#001'} emissiveIntensity={hovered ? 0.4 : 0.05} />
+      <mesh castShadow receiveShadow position={[0, 0.06, 0]}>
+        <boxGeometry args={[3, 0.12, 2.2]} />
+        <meshStandardMaterial color="#2a3340" roughness={0.88} />
       </mesh>
-      {[-0.5, 0.5].map((x, i) => (
+
+      {[-0.9, 0, 0.9].map((x, i) => (
+        <group key={i} position={[x, 0, -0.4]}>
+          <mesh castShadow position={[0, 0.48, 0]}>
+            <boxGeometry args={[0.58, 0.8, 0.44]} />
+            <meshStandardMaterial color="#505b6a" emissive={hovered ? color : '#0e1220'} emissiveIntensity={hovered ? 0.3 : 0.08} />
+          </mesh>
+          <mesh castShadow position={[0, 0.98, 0]}>
+            <cylinderGeometry args={[0.06, 0.06, 0.5, 10]} />
+            <meshStandardMaterial color="#b2bcc9" metalness={0.65} roughness={0.3} />
+          </mesh>
+        </group>
+      ))}
+
+      {[[-1.2, 1.0], [1.2, 1.0]].map(([x, z], i) => (
+        <group key={i} position={[x, 0, z]}>
+          <mesh castShadow position={[0, 1.0, 0]}>
+            <cylinderGeometry args={[0.08, 0.08, 1.8, 8]} />
+            <meshStandardMaterial {...MTL.metalLight} />
+          </mesh>
+          <mesh castShadow position={[0, 1.84, 0]}>
+            <boxGeometry args={[0.2, 0.12, 0.2]} />
+            <meshStandardMaterial color="#768299" />
+          </mesh>
+        </group>
+      ))}
+
+      <mesh castShadow position={[0, 1.85, 1.0]} rotation={[0, 0, Math.PI / 2]}>
+        <cylinderGeometry args={[0.05, 0.05, 2.4, 10]} />
+        <meshStandardMaterial color="#97a2b2" metalness={0.72} roughness={0.26} />
+      </mesh>
+    </group>
+  )
+}
+
+function SmartMeter({ color, hovered }) {
+  return (
+    <group>
+      <mesh castShadow receiveShadow position={[0, 0.04, 0]}>
+        <boxGeometry args={[2.8, 0.08, 2.2]} />
+        <meshStandardMaterial color="#243039" roughness={0.92} />
+      </mesh>
+
+      {[[-0.95, -0.45], [0, -0.45], [0.95, -0.45], [-0.45, 0.55], [0.55, 0.55]].map(([x, z], idx) => (
+        <group key={idx} position={[x, 0, z]}>
+          <mesh castShadow position={[0, 0.34, 0]}>
+            <boxGeometry args={[0.32, 0.64, 0.2]} />
+            <meshStandardMaterial color="#3d4858" />
+          </mesh>
+          <mesh position={[0, 0.35, 0.11]}>
+            <boxGeometry args={[0.2, 0.2, 0.02]} />
+            <meshStandardMaterial color={hovered ? '#7ff4ce' : '#2fd8a7'} emissive={color} emissiveIntensity={hovered ? 0.55 : 0.28} />
+          </mesh>
+          <mesh castShadow position={[0, 0.74, 0]}>
+            <cylinderGeometry args={[0.02, 0.02, 0.2, 6]} />
+            <meshStandardMaterial color="#c0c8d4" />
+          </mesh>
+        </group>
+      ))}
+    </group>
+  )
+}
+
+function Sensor({ color, hovered }) {
+  const pulseRef = useRef()
+
+  useFrame(({ clock }) => {
+    if (pulseRef.current) {
+      const s = 0.85 + 0.15 * Math.sin(clock.elapsedTime * 2.5)
+      pulseRef.current.scale.set(s, s, s)
+    }
+  })
+
+  return (
+    <group>
+      <mesh castShadow receiveShadow position={[0, 0.04, 0]}>
+        <boxGeometry args={[2.8, 0.08, 1.9]} />
+        <meshStandardMaterial color="#2b2733" roughness={0.9} />
+      </mesh>
+
+      {[[-0.8, 0], [0, 0], [0.8, 0], [-0.35, 0.62], [0.35, 0.62]].map(([x, z], i) => (
+        <group key={i} position={[x, 0, z]}>
+          <mesh castShadow position={[0, 0.56, 0]}>
+            <cylinderGeometry args={[0.05, 0.07, 1.1, 8]} />
+            <meshStandardMaterial color="#7d8798" />
+          </mesh>
+          <mesh position={[0, 1.16, 0]}>
+            <sphereGeometry args={[0.13, 10, 10]} />
+            <meshStandardMaterial color={color} emissive={color} emissiveIntensity={hovered ? 0.78 : 0.45} />
+          </mesh>
+        </group>
+      ))}
+
+      <mesh ref={pulseRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.08, 0.2]}>
+        <ringGeometry args={[0.4, 0.48, 30]} />
+        <meshBasicMaterial color={color} transparent opacity={0.45} />
+      </mesh>
+    </group>
+  )
+}
+
+function Battery({ color, hovered }) {
+  return (
+    <group>
+      <mesh castShadow receiveShadow position={[0, 0.05, 0]}>
+        <boxGeometry args={[3.4, 0.1, 2.1]} />
+        <meshStandardMaterial color="#2b2438" roughness={0.88} />
+      </mesh>
+
+      {[-1.05, 0, 1.05].map((x, i) => (
         <group key={i} position={[x, 0, 0]}>
-          <mesh position={[0, 1.0, 0]}>
-            <cylinderGeometry args={[0.06, 0.06, 1.4, 6]} />
-            <meshStandardMaterial color="#888" />
+          <mesh castShadow position={[0, 0.52, 0]}>
+            <boxGeometry args={[0.86, 1.02, 0.92]} />
+            <meshStandardMaterial color="#423069" emissive={color} emissiveIntensity={hovered ? 0.35 : 0.16} metalness={0.35} roughness={0.52} />
           </mesh>
-          <mesh position={[0, 0.35, 0]}>
-            <boxGeometry args={[0.35, 0.5, 0.25]} />
-            <meshStandardMaterial color={color} emissive={color} emissiveIntensity={0.15} />
+          <mesh castShadow position={[0, 1.07, 0]}>
+            <boxGeometry args={[0.82, 0.08, 0.88]} />
+            <meshStandardMaterial color="#606b7f" />
           </mesh>
-        </group>
-      ))}
-    </group>
-  )
-}
-
-function SmartMeter({ color, hovered, time }) {
-  return (
-    <group>
-      {[[-0.5, 0, -0.3], [0, 0, 0], [0.5, 0, 0.3], [-0.3, 0, 0.5]].map(([x, y, z], i) => (
-        <group key={i} position={[x, 0, z]}>
-          <mesh castShadow position={[0, 0.3, 0]}>
-            <boxGeometry args={[0.22, 0.6, 0.12]} />
-            <meshStandardMaterial color="#334" />
-          </mesh>
-          <mesh position={[0, 0.3, 0.07]}>
-            <boxGeometry args={[0.18, 0.14, 0.01]} />
-            <meshStandardMaterial color={color} emissive={color} emissiveIntensity={0.3 + 0.2 * Math.sin(time * 2 + i)} />
+          <mesh position={[0, 0.52, 0.47]}>
+            <boxGeometry args={[0.66, 0.42, 0.02]} />
+            <meshStandardMaterial color="#9ca7b8" metalness={0.65} roughness={0.28} />
           </mesh>
         </group>
       ))}
-    </group>
-  )
-}
 
-function Sensor({ color, hovered, time }) {
-  return (
-    <group>
-      {[[-0.8, 0], [0, 0], [0.8, 0], [-0.4, 0.7], [0.4, 0.7]].map(([x, z], i) => (
-        <group key={i} position={[x, 0, z]}>
-          <mesh castShadow position={[0, 0.5, 0]}>
-            <cylinderGeometry args={[0.08, 0.1, 1.0, 6]} />
-            <meshStandardMaterial color="#555" />
-          </mesh>
-          <mesh position={[0, 1.05, 0]}>
-            <sphereGeometry args={[0.14, 8, 8]} />
-            <meshStandardMaterial color={color} emissive={color} emissiveIntensity={0.5 + 0.3 * Math.sin(time * 3 + i * 1.2)} />
-          </mesh>
-        </group>
-      ))}
-    </group>
-  )
-}
+      <mesh castShadow position={[0, 1.22, 0]}>
+        <boxGeometry args={[3, 0.08, 0.95]} />
+        <meshStandardMaterial color="#4f5968" metalness={0.45} roughness={0.45} />
+      </mesh>
 
-function Battery({ color, hovered, time }) {
-  return (
-    <group>
-      {[[-0.9, 0], [0, 0], [0.9, 0]].map(([x, z], i) => (
-        <mesh key={i} castShadow position={[x, 0.55, z]}>
-          <boxGeometry args={[0.7, 1.1, 0.6]} />
-          <meshStandardMaterial
-            color="#223"
-            emissive={color}
-            emissiveIntensity={0.1 + 0.15 * Math.abs(Math.sin(time * 0.5 + i * 0.8))}
-          />
-        </mesh>
-      ))}
-      <mesh position={[0, 1.2, 0]}>
-        <boxGeometry args={[2.8, 0.08, 0.8]} />
-        <meshStandardMaterial color="#555" />
+      <mesh castShadow position={[-1.45, 0.34, 0.75]}>
+        <boxGeometry args={[0.35, 0.55, 0.28]} />
+        <meshStandardMaterial color="#5b6574" />
       </mesh>
     </group>
   )
 }
 
-const SHAPES = { coal: CoalPlant, nuclear: NuclearPlant, solar: SolarFarm, wind: WindFarm, substation: Substation, meter: SmartMeter, sensor: Sensor, battery: Battery }
+const SHAPES = {
+  coal: CoalPlant,
+  nuclear: NuclearPlant,
+  solar: SolarFarm,
+  wind: WindFarm,
+  substation: Substation,
+  meter: SmartMeter,
+  sensor: Sensor,
+  battery: Battery,
+}
 
 export default function GridNode({ node, selected, onSelect, onHover, labelsOn = true }) {
   const groupRef = useRef()
   const ringRef = useRef()
   const [hovered, setHovered] = useState(false)
-  const [time, setTime] = useState(0)
 
-  useFrame((state, delta) => {
-    setTime(t => t + delta)
+  useFrame((state) => {
     if (groupRef.current) {
-      const targetY = hovered || selected ? 0.25 : 0
-      groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, targetY, 0.1)
+      const targetY = hovered || selected ? 0.2 : 0
+      groupRef.current.position.y = THREE.MathUtils.lerp(groupRef.current.position.y, targetY, 0.09)
     }
+
     if (ringRef.current) {
-      ringRef.current.rotation.y += delta * (selected ? 1.5 : 0.5)
-      ringRef.current.material.opacity = selected ? 0.9 : hovered ? 0.5 : 0.2
+      ringRef.current.rotation.z = state.clock.elapsedTime * 0.25
+      ringRef.current.material.opacity = selected ? 0.95 : hovered ? 0.56 : 0.24
     }
   })
 
@@ -212,41 +375,48 @@ export default function GridNode({ node, selected, onSelect, onHover, labelsOn =
     <group
       ref={groupRef}
       position={node.position}
-      onClick={e => { e.stopPropagation(); onSelect(node) }}
-      onPointerOver={e => { e.stopPropagation(); setHovered(true); onHover(node, e) }}
-      onPointerOut={() => { setHovered(false); onHover(null) }}
+      onClick={(event) => {
+        event.stopPropagation()
+        onSelect(node)
+      }}
+      onPointerOver={(event) => {
+        event.stopPropagation()
+        setHovered(true)
+        onHover(node, event)
+      }}
+      onPointerOut={() => {
+        setHovered(false)
+        onHover(null)
+      }}
     >
-      {/* Ground circle */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 0]}>
-        <circleGeometry args={[1.4, 32]} />
-        <meshStandardMaterial color={color} transparent opacity={selected ? 0.2 : 0.07} />
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 0]} receiveShadow>
+        <circleGeometry args={[1.85, 44]} />
+        <meshStandardMaterial color={color} transparent opacity={selected ? 0.22 : 0.08} />
       </mesh>
 
-      {/* Spinning ring */}
       <mesh ref={ringRef} rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]}>
-        <ringGeometry args={[1.2, 1.4, 32]} />
-        <meshStandardMaterial color={color} transparent opacity={0.2} side={THREE.DoubleSide} />
+        <ringGeometry args={[1.5, 1.82, 42]} />
+        <meshStandardMaterial color={color} transparent opacity={0.24} side={THREE.DoubleSide} />
       </mesh>
 
-      {/* The 3D model */}
-      {Shape && <Shape color={color} hovered={hovered} time={time} />}
+      {Shape && <Shape color={color} hovered={hovered || selected} />}
 
-      {/* Point light for selected */}
-      {(selected || hovered) && <pointLight color={color} intensity={2} distance={6} />}
+      {(selected || hovered) && <pointLight color={color} intensity={1.7} distance={7} />}
 
-      {/* Label */}
       {labelsOn && (
-        <Text
-          position={[0, 2.5, 0]}
-          fontSize={0.35}
-          color={selected ? color : '#aabbcc'}
-          anchorX="center"
-          anchorY="middle"
-          outlineWidth={0.02}
-          outlineColor="#000"
-        >
-          {node.label}
-        </Text>
+        <Billboard position={[0, 2.9, 0]} follow lockX={false} lockY={false} lockZ={false}>
+          <Text
+            fontSize={0.34}
+            color={selected ? color : '#b5c8dc'}
+            anchorX="center"
+            anchorY="middle"
+            outlineWidth={0.02}
+            outlineColor="#02060d"
+            renderOrder={10}
+          >
+            {node.label}
+          </Text>
+        </Billboard>
       )}
     </group>
   )

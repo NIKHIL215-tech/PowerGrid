@@ -7,11 +7,15 @@ export const GRID_NODES = [
     output: 1200,
     efficiency: 38,
     journeyStep: 'Generate',
-    description: 'Traditional coal-fired steam plant. Provides baseload power but emits significant CO₂.',
-    simpleExplain: 'Burns coal to boil water, which creates steam that spins a turbine to make electricity — like a giant kettle powering a wheel.',
-    analogy: '🪨 Like burning wood in a fireplace, but on a massive industrial scale to power an entire city.',
-    funFact: 'One coal plant can power about 600,000 homes, but also releases as much CO₂ as 200,000 cars per year!',
-    stats: { capacity: '1200 MW', fuel: 'Coal', emissions: '820 g CO₂/kWh', online: true },
+    description:
+      'Traditional coal-fired steam plant. Provides baseload power but emits significant CO2.',
+    simpleExplain:
+      'Burns coal to boil water, creating steam that spins a turbine to generate electricity.',
+    analogy:
+      'Like burning fuel in a large industrial boiler to keep a city powered continuously.',
+    funFact:
+      'One coal plant can power around 600,000 homes, but it also creates large carbon emissions.',
+    stats: { capacity: '1200 MW', fuel: 'Coal', emissions: '820 g CO2/kWh', online: true },
   },
   {
     id: 'nuclear-plant',
@@ -21,11 +25,15 @@ export const GRID_NODES = [
     output: 2000,
     efficiency: 33,
     journeyStep: 'Generate',
-    description: 'Zero-carbon baseload generation. Provides stable output independent of weather conditions.',
-    simpleExplain: 'Splits tiny atoms of uranium to release enormous heat, which also boils water to spin turbines — but with zero CO₂ emissions.',
-    analogy: '⚛️ Like a coal plant, but instead of burning fuel it splits atoms. A pellet of uranium the size of a fingertip contains as much energy as 3 tonnes of coal!',
-    funFact: 'Nuclear plants run 24/7 regardless of weather, making them the most reliable large-scale energy source we have.',
-    stats: { capacity: '2000 MW', fuel: 'Uranium', emissions: '12 g CO₂/kWh', online: true },
+    description:
+      'Low-carbon baseload generation. Provides stable output independent of weather conditions.',
+    simpleExplain:
+      'Splits uranium atoms to release heat, which produces steam and drives turbines.',
+    analogy:
+      'Like a thermal plant powered by atomic energy instead of combustion fuel.',
+    funFact:
+      'Nuclear stations run at high availability and are among the most reliable large-scale sources.',
+    stats: { capacity: '2000 MW', fuel: 'Uranium', emissions: '12 g CO2/kWh', online: true },
   },
   {
     id: 'solar-farm',
@@ -35,11 +43,15 @@ export const GRID_NODES = [
     output: 400,
     efficiency: 22,
     journeyStep: 'Generate',
-    description: 'Photovoltaic solar array generating clean electricity from sunlight. Output varies with irradiance.',
-    simpleExplain: 'Thousands of solar panels convert sunlight directly into electricity using the photovoltaic effect — no moving parts, no fuel, no pollution.',
-    analogy: '☀️ Like a calculator that runs on light, but scaled up to power an entire town. Clouds reduce output, just like shading your calculator screen.',
-    funFact: 'The sunlight hitting Earth in just 1 hour contains more energy than all of humanity uses in an entire year!',
-    stats: { capacity: '400 MW', fuel: 'Sunlight', emissions: '0 g CO₂/kWh', online: true },
+    description:
+      'Photovoltaic solar array producing clean electricity from sunlight. Output varies with irradiance.',
+    simpleExplain:
+      'Panels convert sunlight directly into electricity through the photovoltaic effect.',
+    analogy:
+      'Like many light-powered devices scaled up to utility level.',
+    funFact:
+      'Solar output peaks around midday and falls rapidly near sunset.',
+    stats: { capacity: '400 MW', fuel: 'Sunlight', emissions: '0 g CO2/kWh', online: true },
   },
   {
     id: 'wind-farm',
@@ -49,11 +61,15 @@ export const GRID_NODES = [
     output: 300,
     efficiency: 45,
     journeyStep: 'Generate',
-    description: 'Onshore wind turbines convert kinetic wind energy to electricity. Output depends on wind speed.',
-    simpleExplain: 'Giant spinning blades catch the wind and turn a generator — exactly like a bicycle dynamo, just much, much bigger.',
-    analogy: '🌬️ Like a pinwheel toy, but each blade is 50 metres long and one turbine can power 400 homes!',
-    funFact: 'Wind turbines can work at wind speeds from 12 to 90 km/h. Too slow = no power. Too fast = they shut down for safety.',
-    stats: { capacity: '300 MW', fuel: 'Wind', emissions: '0 g CO₂/kWh', online: true },
+    description:
+      'Onshore wind turbines convert kinetic wind energy into electricity. Output depends on wind speed.',
+    simpleExplain:
+      'Large blades rotate a generator when wind conditions are sufficient.',
+    analogy:
+      'Like a mechanical rotor that creates power when natural flow is available.',
+    funFact:
+      'Turbines operate in an optimal wind range and shut down during extreme conditions for safety.',
+    stats: { capacity: '300 MW', fuel: 'Wind', emissions: '0 g CO2/kWh', online: true },
   },
   {
     id: 'substation-a',
@@ -63,11 +79,15 @@ export const GRID_NODES = [
     output: 0,
     efficiency: 99,
     journeyStep: 'Transmit',
-    description: 'Steps down 500 kV transmission voltage to 138 kV for regional distribution. Includes protective relays and circuit breakers.',
-    simpleExplain: 'Acts as a "transformer" — it takes extremely high-voltage electricity from power plants and steps it down so it can be used in your region.',
-    analogy: '🔧 Like a pressure reducer in a water pipe. High pressure travels long distances efficiently, but you need lower pressure before it enters your home.',
-    funFact: 'Electricity is sent at extremely high voltages (500,000 volts!) across long distances because it loses less energy that way — but that voltage would be lethal in your home, so substations step it down.',
-    stats: { voltage: '500kV → 138kV', load: '78%', status: 'Normal', online: true },
+    description:
+      'Steps down 500 kV transmission voltage to 138 kV for regional distribution. Includes relays and breakers.',
+    simpleExplain:
+      'Adjusts very high-voltage power so it can move safely to the next part of the network.',
+    analogy:
+      'Like reducing high pressure in a trunk pipeline before local distribution.',
+    funFact:
+      'High-voltage transfer reduces line losses over long distances.',
+    stats: { voltage: '500kV -> 138kV', load: '78%', status: 'Normal', online: true },
   },
   {
     id: 'substation-b',
@@ -77,11 +97,15 @@ export const GRID_NODES = [
     output: 0,
     efficiency: 99,
     journeyStep: 'Distribute',
-    description: 'Steps down 138 kV to 12.47 kV for local distribution to homes and businesses.',
-    simpleExplain: 'The final voltage step-down before electricity reaches your street — reduces it from regional levels to the safe levels used in homes and shops.',
-    analogy: '🏘️ Like the local water tower in your neighbourhood — it stores and regulates pressure before water flows to individual homes.',
-    funFact: 'By the time electricity reaches a wall socket, its voltage has been stepped down over 40,000 times from what left the power plant!',
-    stats: { voltage: '138kV → 12.47kV', load: '65%', status: 'Normal', online: true },
+    description:
+      'Steps down 138 kV to 12.47 kV for local feeders serving homes and businesses.',
+    simpleExplain:
+      'Performs the final major voltage reduction before neighborhood delivery.',
+    analogy:
+      'Like local pressure regulation before utility service reaches individual users.',
+    funFact:
+      'Multiple voltage transformation stages make transmission efficient and end-use safe.',
+    stats: { voltage: '138kV -> 12.47kV', load: '65%', status: 'Normal', online: true },
   },
   {
     id: 'smart-meter-1',
@@ -91,10 +115,14 @@ export const GRID_NODES = [
     output: 0,
     efficiency: 100,
     journeyStep: 'Measure',
-    description: 'Advanced metering infrastructure (AMI). Enables two-way communication, real-time usage data, and remote disconnect.',
-    simpleExplain: 'A digital upgrade to the old spinning-dial electricity meter — it sends your usage data to the utility every 15 minutes, so bills are always accurate and faults are detected instantly.',
-    analogy: '📱 Like a fitness tracker for your home\'s electricity — constantly measuring, recording, and reporting usage in real time.',
-    funFact: 'Smart meters can detect if your fridge is about to break down before it happens, by spotting unusual power patterns!',
+    description:
+      'Advanced metering infrastructure for two-way communication, interval data, and remote operations.',
+    simpleExplain:
+      'Digital meters send usage updates to utilities frequently for accurate visibility and billing.',
+    analogy:
+      'Like a connected telemetry device for household energy behavior.',
+    funFact:
+      'Interval readings improve demand forecasting and outage diagnostics.',
     stats: { units: '1,240 meters', interval: '15 min reads', communication: 'RF Mesh', online: true },
   },
   {
@@ -105,24 +133,32 @@ export const GRID_NODES = [
     output: 0,
     efficiency: 100,
     journeyStep: 'Measure',
-    description: 'Phasor measurement units (PMUs) and fault sensors providing real-time grid state visibility.',
-    simpleExplain: 'Thousands of tiny sensors spread across the grid constantly check if electricity is flowing properly — they can detect a fault and pinpoint its location in under a millisecond.',
-    analogy: '🩺 Like a doctor taking your pulse 1000 times per second across the entire grid, watching for any irregularities.',
-    funFact: 'Without sensors, a blackout could take hours to locate. With them, fault location takes under 1 second!',
+    description:
+      'Phasor and fault sensors provide high-speed visibility into grid state and disturbances.',
+    simpleExplain:
+      'Distributed sensors continuously watch flow quality and help locate faults quickly.',
+    analogy:
+      'Like a live diagnostic nervous system spanning the grid.',
+    funFact:
+      'Fast sensor telemetry can shrink fault localization from hours to seconds.',
     stats: { sensors: '48 PMUs', latency: '<1 ms', coverage: '98%', online: true },
   },
   {
     id: 'battery-storage',
     type: 'battery',
     label: 'Battery Energy Storage',
-    position: [10, 0, 2],
+    position: [-5, 0, -10],
     output: 200,
     efficiency: 92,
     journeyStep: 'Store',
-    description: 'Grid-scale lithium-ion battery for peak shaving, frequency regulation, and renewable integration.',
-    simpleExplain: 'A giant rechargeable battery that stores surplus electricity when supply exceeds demand, then releases it when demand spikes — keeping the grid perfectly balanced.',
-    analogy: '🔋 Like the battery in your phone, but big enough to power 200,000 homes for an hour. It charges when electricity is cheap and releases when it\'s needed.',
-    funFact: 'Grid batteries can go from fully charging to fully discharging in under 200 milliseconds — faster than you can blink!',
+    description:
+      'Grid-scale lithium-ion battery supporting peak shaving, frequency regulation, and renewable balancing.',
+    simpleExplain:
+      'Stores surplus energy and releases it when demand rises or renewable output drops.',
+    analogy:
+      'Like a fast-response buffer that smooths supply and demand swings.',
+    funFact:
+      'Utility batteries can respond in milliseconds for grid frequency support.',
     stats: { capacity: '200 MW / 800 MWh', soc: '72%', mode: 'Charging', online: true },
   },
 ]
@@ -147,63 +183,70 @@ export const CHART_DATA = {
 export const TOUR_STEPS = [
   {
     target: null,
-    emoji: '⚡',
-    title: 'How Does Electricity Reach Your Home?',
-    body: 'This 3D model shows a real smart power grid — the system that generates electricity and delivers it to homes and businesses. You\'re about to explore each part of it step by step.',
-    analogy: 'Think of the grid like a water supply system: water is pumped (generated), sent through large pipes (transmission), split into smaller pipes (distribution), and finally flows from your tap (your home).',
-    tip: 'Click any glowing node to learn what it does. Use your mouse to rotate, zoom, and explore the 3D scene.',
+    emoji: 'Overview',
+    title: 'How Electricity Reaches Consumers',
+    body:
+      'This 3D model represents a smart grid where generation, transmission, distribution, and IoT telemetry operate as one system.',
+    analogy:
+      'Think of a utility network that sources, transports, conditions, and delivers flow while monitoring each segment continuously.',
+    tip: 'Click any highlighted node to inspect its role and live metrics.',
   },
   {
     target: 'coal-plant',
-    emoji: '🏭',
-    title: 'Step 1: Making Electricity (Generation)',
-    body: 'Power plants are where electricity is created. Coal and nuclear plants work 24/7 — they\'re called "baseload" plants because they form the reliable base of the grid. Coal burns fossil fuel and releases CO₂; nuclear splits atoms cleanly.',
-    analogy: 'Like the pump in a water system — it\'s the source of all the energy. Without generation, nothing else works.',
-    tip: 'Notice the glowing lines leaving the power plants — those are transmission lines carrying electricity at very high voltage.',
+    emoji: 'GEN-1',
+    title: 'Step 1: Baseload Generation',
+    body:
+      'Coal and nuclear facilities provide dependable baseload output to keep system frequency and supply stable throughout the day.',
+    analogy: 'These are the primary supply engines that keep core demand served.',
+    tip: 'Notice transmission lines leaving generation assets toward the first substation.',
   },
   {
     target: 'solar-farm',
-    emoji: '🌱',
-    title: 'Step 2: Clean / Renewable Energy',
-    body: 'Solar and wind farms generate electricity with zero CO₂ emissions. The challenge is they\'re weather-dependent — no sun at night, no wind on calm days. This is why we need battery storage to fill the gaps.',
-    analogy: 'Like a water mill — it only works when water (or wind/sun) is available. Great when conditions are right, but needs backup for cloudy or calm days.',
-    tip: 'Notice renewable sources are connected to Battery Storage nearby — batteries store their excess power for later use.',
+    emoji: 'GEN-2',
+    title: 'Step 2: Renewable Injection',
+    body:
+      'Solar and wind assets add clean generation, but output varies with weather and time, so balancing resources are required.',
+    analogy: 'Variable supply streams that reduce emissions while needing firming support.',
+    tip: 'Observe how storage and substations coordinate variable renewable output.',
   },
   {
     target: 'substation-a',
-    emoji: '🔌',
-    title: 'Step 3: Transmission — Sending Power Far Away',
-    body: 'Electricity leaves power plants at extremely high voltages (500,000 volts!) because high voltage loses less energy over long distances. Substations step the voltage down to safer levels for your region.',
-    analogy: 'Like reducing water pressure step by step as it gets closer to your home. The main pipe has very high pressure; by the time it\'s at your tap, it\'s just right.',
-    tip: 'The voltage goes from 500kV at the plant down to 138kV here, and then to 12kV near homes. Each step makes it safer.',
+    emoji: 'TX',
+    title: 'Step 3: High-Voltage Transmission',
+    body:
+      'Electricity moves long distances at high voltage to limit losses, then substations step it down for regional and local networks.',
+    analogy: 'Bulk transfer first, precision delivery later.',
+    tip: 'Voltage transformations at substations improve both safety and efficiency.',
   },
   {
     target: 'battery-storage',
-    emoji: '🔋',
-    title: 'Step 4: Energy Storage — The Grid\'s Buffer',
-    body: 'Grid-scale batteries store electricity when there\'s too much (e.g., sunny afternoon) and release it when there\'s too little (e.g., evening peak). They also respond in milliseconds to sudden changes in grid frequency.',
-    analogy: 'Like a water tank on your roof — fills up when water supply is high, and empties when you need it. Keeps supply steady even if the source fluctuates.',
-    tip: 'The battery is currently 72% charged and in Charging mode — it\'s absorbing excess solar energy right now.',
+    emoji: 'BESS',
+    title: 'Step 4: Storage and Flexibility',
+    body:
+      'Grid batteries absorb excess energy and discharge during peaks, supporting frequency response and renewable integration.',
+    analogy: 'A fast balancing buffer between variable supply and changing demand.',
+    tip: 'Current state-of-charge and operating mode are shown in the detail panel.',
   },
   {
     target: 'smart-meter-1',
-    emoji: '📡',
-    title: 'Step 5: Smart Meters & Sensors — The Grid\'s Nervous System',
-    body: 'Smart meters measure exactly how much electricity each home uses, every 15 minutes. Sensors across the grid detect faults instantly. Together they create the "Internet of Things" (IoT) backbone of the modern smart grid.',
-    analogy: 'Like nerve endings in your body — they sense everything happening across the grid and send signals back to the brain (control centre) so problems can be fixed instantly.',
-    tip: 'Without IoT sensors, finding a fault could take engineers hours of driving around. With them, it takes under 1 second!',
+    emoji: 'IOT',
+    title: 'Step 5: Smart Metering and Sensors',
+    body:
+      'Smart meters and sensors stream telemetry that improves forecasting, outage response, and operational decision-making.',
+    analogy: 'A distributed measurement layer acting as the grid information backbone.',
+    tip: 'Real-time data enables faster fault detection and recovery.',
   },
 ]
 
 export const GLOSSARY = [
-  { term: 'MW (Megawatt)', def: 'A unit of power. 1 MW can power about 500 homes. This grid produces 3,900 MW total.' },
-  { term: 'kV (Kilovolt)', def: 'A unit of voltage (electrical pressure). 1 kV = 1,000 volts. Your home runs on 230 volts; the grid uses up to 500,000 volts for long-distance transmission.' },
-  { term: 'Baseload', def: 'Power plants that run 24/7 providing a constant, reliable supply of electricity regardless of demand. Coal and nuclear are baseload plants.' },
-  { term: 'Renewable Energy', def: 'Electricity from sources that naturally replenish — like sun, wind, and water. They produce zero CO₂ but output varies with weather.' },
-  { term: 'Efficiency (%)', def: 'How much of the input energy becomes useful electricity. A 38% efficient coal plant wastes 62% as heat. Wind turbines are 45% efficient.' },
-  { term: 'IoT (Internet of Things)', def: 'Physical devices (sensors, meters) connected to the internet to collect and share data. Smart meters are IoT devices.' },
-  { term: 'PMU (Phasor Measurement Unit)', def: 'A sensor that measures the electrical state of the grid 1000 times per second. Think of it as a super-fast voltmeter.' },
-  { term: 'Substation', def: 'A facility that transforms voltage levels. Transmission substations step down from 500kV to 138kV; distribution substations step down further to 12kV for homes.' },
-  { term: 'Smart Grid', def: 'A modern electricity network that uses digital sensors, IoT, and two-way communication to automatically monitor, control, and optimise energy flow.' },
-  { term: 'Grid Frequency', def: 'Electricity in the grid oscillates at exactly 50 Hz (in India/Europe) or 60 Hz (in USA). If generation and demand become unbalanced, frequency drops — batteries correct this instantly.' },
+  { term: 'MW (Megawatt)', def: 'A power unit. 1 MW can support roughly hundreds of homes depending on local demand.' },
+  { term: 'kV (Kilovolt)', def: 'A voltage unit. 1 kV equals 1,000 volts.' },
+  { term: 'Baseload', def: 'Generation that runs consistently to meet foundational demand levels.' },
+  { term: 'Renewable Energy', def: 'Electricity from replenishable sources such as solar and wind.' },
+  { term: 'Efficiency (%)', def: 'The percentage of input energy converted to useful electrical output.' },
+  { term: 'IoT', def: 'Connected devices that measure and exchange operational data.' },
+  { term: 'PMU', def: 'Phasor Measurement Unit, a high-speed device for grid state measurement.' },
+  { term: 'Substation', def: 'Facility used for voltage transformation and switching operations.' },
+  { term: 'Smart Grid', def: 'A digitally monitored and controllable electricity network.' },
+  { term: 'Grid Frequency', def: 'System frequency target that indicates real-time supply-demand balance.' },
 ]

@@ -4,12 +4,11 @@ import { CHART_DATA } from '../data/gridData'
 const HOURS = ['0', '3', '6', '9', '12', '15', '18', '21', '24']
 
 const MODES = [
-  { key: 'consumption', label: 'Load',   unit: 'MW',  color: '#00c8ff' },
-  { key: 'renewable',   label: 'Solar',  unit: 'MW',  color: '#22d3a0' },
-  { key: 'gridLoad',    label: 'Util%',  unit: '%',   color: '#f59e0b' },
+  { key: 'consumption', label: 'Demand', unit: 'MW', color: '#63c7ff' },
+  { key: 'renewable', label: 'Renewables', unit: 'MW', color: '#2ed6a5' },
+  { key: 'gridLoad', label: 'Utilization', unit: '%', color: '#f8b84a' },
 ]
 
-/* Smooth animated counter */
 function useCounter(target, duration = 900) {
   const [value, setValue] = useState(0)
   const raf = useRef(null)
@@ -21,7 +20,7 @@ function useCounter(target, duration = 900) {
 
     const tick = (now) => {
       const t = Math.min((now - start) / duration, 1)
-      const ease = 1 - Math.pow(1 - t, 3)          // ease-out cubic
+      const ease = 1 - (1 - t) ** 3
       setValue(Math.round(from + delta * ease))
       if (t < 1) raf.current = requestAnimationFrame(tick)
     }
@@ -36,82 +35,92 @@ function useCounter(target, duration = 900) {
 export default function DataPanel() {
   const [mode, setMode] = useState('consumption')
 
-  const data       = CHART_DATA[mode]
-  const max        = Math.max(...data)
-  const modeConfig = MODES.find(m => m.key === mode)
-  const color      = modeConfig.color
+  const data = CHART_DATA[mode]
+  const max = Math.max(...data)
+  const modeConfig = MODES.find((entry) => entry.key === mode)
+  const color = modeConfig.color
   const currentHour = new Date().getHours()
 
-  const totalMW      = useCounter(3900)
+  const totalMW = useCounter(3900)
   const renewablePct = useCounter(18)
-  const gridEff      = useCounter(97)
+  const gridEff = useCounter(97)
 
   return (
-    <div className="data-panel">
-      <div className="data-panel-header">
-        <span className="data-panel-title">Grid Analytics</span>
+    <aside className="data-panel">
+      <header className="data-panel-header">
+        <div className="data-panel-title-wrap">
+          <span className="data-panel-title">Operational Analytics</span>
+          <span className="data-panel-live">
+            <span className="data-panel-live-dot" /> Live stream
+          </span>
+        </div>
+
         <div className="chart-mode-btns">
-          {MODES.map(m => (
+          {MODES.map((entry) => (
             <button
-              key={m.key}
-              className={`chart-mode-btn ${mode === m.key ? 'active' : ''}`}
-              onClick={() => setMode(m.key)}
+              key={entry.key}
+              className={`chart-mode-btn ${mode === entry.key ? 'active' : ''}`}
+              onClick={() => setMode(entry.key)}
             >
-              {m.label}
+              {entry.label}
             </button>
+          ))}
+        </div>
+      </header>
+
+      <div className="chart-container">
+        <div className="chart-row">
+          {data.map((value, index) => {
+            const isCurrent = index === currentHour
+            const heightPct = `${(value / max) * 100}%`
+            const background = isCurrent
+              ? `linear-gradient(180deg, ${color} 0%, ${color}90 100%)`
+              : `linear-gradient(180deg, ${color}50 0%, ${color}1c 100%)`
+
+            return (
+              <div
+                key={index}
+                className={`chart-bar${isCurrent ? ' current' : ''}`}
+                data-val={`${value}${modeConfig.unit}`}
+                style={{
+                  height: heightPct,
+                  background,
+                  boxShadow: isCurrent ? `0 0 14px ${color}80` : 'none',
+                }}
+              />
+            )
+          })}
+        </div>
+
+        <div className="chart-axis">
+          {HOURS.map((hour) => (
+            <span key={hour}>{hour}h</span>
           ))}
         </div>
       </div>
 
-      {/* Bar chart */}
-      <div className="chart-row">
-        {data.map((v, i) => {
-          const isCurrent = i === currentHour
-          const heightPct = `${(v / max) * 100}%`
-          const bg = isCurrent
-            ? `linear-gradient(180deg, ${color} 0%, ${color}88 100%)`
-            : `${color}33`
-
-          return (
-            <div
-              key={i}
-              className={`chart-bar${isCurrent ? ' current' : ''}`}
-              data-val={`${v}${modeConfig.unit}`}
-              style={{
-                height: heightPct,
-                background: bg,
-                boxShadow: isCurrent ? `0 0 8px ${color}66` : 'none',
-              }}
-            />
-          )
-        })}
-      </div>
-
-      <div className="chart-axis">
-        {HOURS.map(h => <span key={h}>{h}h</span>)}
-      </div>
-
-      {/* KPIs with animated counters */}
       <div className="kpi-row">
         <div className="kpi">
-          <div className="kpi-val" style={{ color: '#00c8ff' }}>
+          <div className="kpi-val" style={{ color: '#63c7ff' }}>
             {totalMW.toLocaleString()}
           </div>
-          <div className="kpi-label">MW Total</div>
+          <div className="kpi-label">MW Output</div>
         </div>
+
         <div className="kpi">
-          <div className="kpi-val" style={{ color: '#22d3a0' }}>
+          <div className="kpi-val" style={{ color: '#2ed6a5' }}>
             {renewablePct}%
           </div>
-          <div className="kpi-label">Renewable</div>
+          <div className="kpi-label">Renewables</div>
         </div>
+
         <div className="kpi">
-          <div className="kpi-val" style={{ color: '#f59e0b' }}>
+          <div className="kpi-val" style={{ color: '#f8b84a' }}>
             {gridEff}%
           </div>
           <div className="kpi-label">Efficiency</div>
         </div>
       </div>
-    </div>
+    </aside>
   )
 }

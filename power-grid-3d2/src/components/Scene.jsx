@@ -7,36 +7,55 @@ import GridNode from './GridNode'
 import TransmissionLines from './TransmissionLines'
 import Ground from './Ground'
 
-function CameraFocus({ targetId }) {
+function CameraFocus({ targetId, controlsRef }) {
   const { camera } = useThree()
   const prevTarget = useRef(null)
-  const animatedTarget = useRef(new THREE.Vector3(0, 0, 0))
-  const animatedPos = useRef(new THREE.Vector3(0, 22, 28))
+  const animTarget = useRef(new THREE.Vector3(0, 0, 0))
+  const animPos = useRef(new THREE.Vector3(0, 22, 28))
+  const isAnimating = useRef(false)
 
   useEffect(() => {
-    if (!targetId || targetId === prevTarget.current) return
+    if (targetId === prevTarget.current) return
     prevTarget.current = targetId
-    const node = GRID_NODES.find(n => n.id === targetId)
-    if (!node) return
-    const [x, , z] = node.position
-    const target = new THREE.Vector3(x, 0, z)
-    const camPos = new THREE.Vector3(x + 8, 8, z + 10)
-    
-    animatedTarget.current.copy(target)
-    animatedPos.current.copy(camPos)
+    isAnimating.current = true
+
+    if (!targetId) {
+      animTarget.current.set(0, 0, 0)
+      animPos.current.set(0, 22, 28)
+    } else {
+      const node = GRID_NODES.find(n => n.id === targetId)
+      if (!node) return
+      const [x, , z] = node.position
+      animTarget.current.set(x, 0, z)
+      animPos.current.set(x + 8, 8, z + 10)
+    }
   }, [targetId])
 
   useFrame((state, delta) => {
+    if (!isAnimating.current) return
+
     const t = 1.0 - Math.pow(0.001, delta)
-    
-    const target = animatedTarget.current
-    camera.position.lerp(animatedPos.current, t)
-    
-    const currentLookAt = new THREE.Vector3()
-    camera.getWorldDirection(currentLookAt)
-    currentLookAt.multiplyScalar(10).add(camera.position)
-    currentLookAt.lerp(target, t)
-    camera.lookAt(target)
+    camera.position.lerp(animPos.current, t)
+    camera.lookAt(animTarget.current)
+
+    if (controlsRef.current) {
+      controlsRef.current.target.lerp(animTarget.current, t)
+      controlsRef.current.update()
+    }
+
+    const posDist = camera.position.distanceTo(animPos.current)
+    const tgtDist = controlsRef.current
+      ? controlsRef.current.target.distanceTo(animTarget.current)
+      : 0
+
+    if (posDist < 0.05 && tgtDist < 0.05) {
+      isAnimating.current = false
+      camera.position.copy(animPos.current)
+      if (controlsRef.current) {
+        controlsRef.current.target.copy(animTarget.current)
+        controlsRef.current.update()
+      }
+    }
   })
 
   return null
@@ -88,8 +107,9 @@ function LoadingFallback() {
   )
 }
 
-export default function Scene({ selectedId, onSelect, onHover, focusId, labelsOn }) {
+export default function Scene({ selectedId, onSelect, onHover, focusId, labelsOn, floorMode = 'grid' }) {
   const [hasError, setHasError] = useState(false)
+  const controlsRef = useRef()
   
   useEffect(() => {
     const handleWebGLContextLost = (e) => {
@@ -142,7 +162,7 @@ export default function Scene({ selectedId, onSelect, onHover, focusId, labelsOn
         <fog attach="fog" args={['#050d1a', 40, 90]} />
         <Stars radius={80} depth={40} count={3000} factor={3} saturation={0.3} fade speed={0.5} />
         <Lights />
-        <Ground />
+        <Ground mode={floorMode} />
         <TransmissionLines lines={TRANSMISSION_LINES} nodes={GRID_NODES} />
         {GRID_NODES.map(node => (
           <GridNode
@@ -155,14 +175,14 @@ export default function Scene({ selectedId, onSelect, onHover, focusId, labelsOn
           />
         ))}
         <OrbitControls
+          ref={controlsRef}
           enablePan
           enableZoom
           minDistance={6}
           maxDistance={60}
-          maxPolarAngle={Math.PI / 2.1}
-          target={[0, 0, 0]}
+          maxPolarAngle={Math.PI * 0.85}
         />
-        <CameraFocus targetId={focusId} />
+        <CameraFocus targetId={focusId} controlsRef={controlsRef} />
       </Suspense>
     </Canvas>
   )
